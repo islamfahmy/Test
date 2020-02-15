@@ -1,0 +1,164 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+struct node
+{
+    char world[30];
+    struct node *left,*right;
+};
+typedef struct node Node ;
+struct tree
+{
+    Node *root;
+};
+typedef struct tree Tree;
+Node * constructNode(char *x)
+{
+    Node * temp =(Node *)malloc(sizeof(Node));
+    strcpy(temp->world,x);
+    temp->left=NULL;
+    temp->right=NULL;
+    return temp;
+}
+Node * insertNode(Node *n,char *x)
+{
+    if (n==NULL)
+        return constructNode(x);
+    else if(strcasecmp(n->world,x)<0)
+        n->right=insertNode(n->right,x);
+    else if(strcasecmp(n->world,x)>0)
+        n->left=insertNode(n->left,x);
+    return n ;
+}
+Node * Addtotree(Node *n)
+{
+    FILE *fp = fopen("EN-US-randomized-unique updated.txt", "r");
+    if(fp==NULL)
+        printf("cannot read file");
+    char line[100];
+    char v;
+    int i ;
+    while(fscanf(fp,"%s",line)==1)
+        n=insertNode(n,line);
+    return n;
+}
+int max(int a,int b)
+{
+    return (a>b)?a:b;
+
+}
+int getsize(Node*n)
+{
+    if(n==NULL)
+        return 0 ;
+    return 1+getsize(n->left)+getsize(n->right);
+}
+int getheight(Node *n)
+{
+    if(n==NULL)
+        return 0;
+    return 1+max(getheight(n->left),getheight(n->right));
+}
+char *minvalue(Node *n)
+{
+    while(n->left!=NULL)
+        n=n->left;
+    return n->world;
+
+}
+char * maxValue(Node *n)
+{
+    while(n->right!=NULL)
+        n=n->right;
+    return n->world;
+}
+char * getPredecosor(Node * root, Node *n)
+{
+    if(n->left!=NULL)
+    {
+        return maxValue(n->left);
+    }
+    char *world = n->world;
+    Node * succ= NULL;
+    while(root!=NULL)
+    {
+        if(strcasecmp(world,root->world)<0)
+        {
+            succ= root;
+            root= root->left;
+
+        }
+        else if (strcasecmp(world,root->world)>0)
+            root=root->right;
+        else
+            break;
+    }
+    return succ->world;
+}
+char * getSuccesor(Node *root,Node * n)
+{
+    if(n->right!=NULL)
+        return minvalue(n->right);
+    char *world=n->world;
+    Node * succ = NULL;
+    while(root!=NULL)
+    {
+        if(strcasecmp(world,root->world)>0)
+        {
+            succ = root;
+                root=root->right;
+        }
+        else if(strcasecmp(world,root->world)<0)
+            root=root->left;
+        else
+            break ;
+    }
+    return succ->world;
+}
+
+void check(char *v,Node *n,Node *root)
+{
+    //printf("%s\n", n->world);
+    if(strcasecmp(v,n->world)==0)
+        printf("%s ,correct\n",v);
+    else if (strcasecmp(n->world,v)<0)
+    {
+        if(n->right==NULL)
+
+            printf("%s ,%s ,%s ,%s \n",v, n->world,getPredecosor(root,n->world),getSuccesor(root,n));
+
+
+        else
+            check(v,n->right,root);
+    }
+    else if (strcasecmp(n->world,v)>0)
+    {
+        if(n->left==NULL)
+
+            printf("%s ,%s ,%s ,%s\n",v,n->world,getPredecosor(root,n->world),getSuccesor(root,n));
+
+        else
+            check(v,n->left,root);
+    }
+}
+void autocorrect(Node * root)
+{
+    char v[100];
+    while(1)
+    {
+        scanf("%s",v);
+        //printf("%s\n",v);
+        check(v,root,root);
+    }
+}
+int main()
+{
+
+    Node *root = NULL;
+    root = Addtotree(root);
+    printf("height = %d\tsize= %d\n",getheight(root)-1,getsize(root));
+  printf("%s",maxValue(root));
+    autocorrect(root);
+
+}

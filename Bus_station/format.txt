@@ -1,0 +1,4 @@
+bus : Max platenumber	 intetrnal del external del
+Driver :  id name username password internal del external  del
+Customer : id username password 
+trip source dest price distance nostops id buse driver  id  del

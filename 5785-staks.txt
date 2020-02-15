@@ -1,0 +1,298 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <math.h>
+/*
+ *
+ */
+typedef struct
+{
+    int top ;
+    char value[100];
+} Stack;
+Stack s;
+typedef struct
+{
+    int top ;
+    float value[100];
+} stack;
+stack f;
+/*
+ *
+ */
+void init(Stack *s)
+{   //s=(Stack*)malloc(sizeof(Stack));
+    s->top=-1;
+}
+/*
+ *
+ */
+int isEmpty(Stack *s)
+{
+    if (s->top==-1)
+        return 1;
+    return 0;
+}
+
+char pop(Stack *s) ;
+char top(Stack *s)
+{
+
+    return s->value[s->top];
+}
+/*
+ *
+ */
+char pop(Stack *s)
+{   //printf("\ntop =%d\n",(s->top)-1);
+    char x=s->value[(s->top)--];
+    return x;
+}
+/*
+ *
+ */
+void push(Stack *s, float val)
+{
+    s->value[++(s->top)]=val;
+}
+/*
+ *
+ */
+void destroy(Stack *s)
+{
+    free(s);
+}
+void initf(stack *f)
+{   //f=(stack*)malloc(sizeof(stack));
+    f->top=-1;
+}
+/*
+ *
+ */
+int isEmptyf(stack *f)
+{
+    if (f->top==-1)
+        return 1;
+    return 0;
+}
+
+float popf(stack *f) ;
+float topf(stack *f)
+{
+
+    return f->value[f->top];
+}
+/*
+ *
+ */
+float popf(stack *f)
+{
+    float x=f->value[(f->top)--];
+    return x;
+}
+/*
+ *
+ */
+void pushf(stack *f, float val)
+{
+    f->value[++(f->top)]=val;
+}
+/*
+ *
+ */
+void destroyf(stack *f)
+{
+    free(f);
+}
+/*
+ * infixToPostfix: converts an expression in infix notation to
+ *					to a postfix notation (Reverse-Polish Notation)
+ *					e.g., 2 + 3 --> 2 3 +
+ *					e.g., (2 + 3) * 4 --> 2 3 + 4 *
+ */
+int priority (char x)
+{
+    if(x=='(')
+        return 0;
+    if(x=='+'||x=='-')
+        return 1;
+    else if(x=='*'||x=='/')
+        return 2;
+    else if (x=='^')
+        return 3;
+}
+int isnum (char x)
+{
+    if(48<=x&&x<=57)
+        return 1;
+    return 0;
+}
+int mo7armat (char x)
+{
+    if(x==' '||x=='\n'||x=='\0')
+        return 1;
+    return 0;
+}
+void infixToPostfix(char* infix, char* postfix)
+{   if(*postfix=='\n');
+
+    init(&s);
+
+    initf(&f);
+    char temp[255];
+    char tmp;
+    push(&s,'(');
+    while (*infix!='\0')
+    {   while(*infix==' ')
+        infix++;
+        if(*infix=='\0')
+            break;
+        int i=0;
+        while(!mo7armat(*infix))
+        {
+            temp[i++]=*(infix++);
+            ////printf("%c",temp[i-1]);
+        }//printf("\n");
+        temp[i]=*(infix++);
+        if(isnum(temp[i-1]))
+        {
+            i=0;
+            while(!mo7armat(temp[i]))
+            {
+             *(postfix++)=temp[i++];
+
+
+            }
+
+            *(postfix++)=' ';
+        }
+        else
+        {
+            char end = top(&s);
+            if(temp[i-1]==')')
+            {
+                tmp =pop(&s);
+                while (tmp!='(')
+                {
+                    *(postfix++)=tmp;
+                    *(postfix++)=' ';
+                    tmp =pop(&s);
+                }
+            }
+
+            else if(priority(end)>=priority(temp[i-1])&&temp[i-1]!='('&&temp[i-1]!=')')
+            {
+                *(postfix++)=pop(&s);
+                *(postfix++)=' ';
+                push(&s,temp[i-1]);
+
+            }
+            else
+            {
+                push(&s,temp[i-1]);
+            }
+
+        }
+
+    }
+    tmp =pop(&s);
+    while (tmp!='(')
+    {
+        *(postfix++)=tmp;
+        *(postfix++)=' ';
+        tmp =pop(&s);
+    }
+    *(postfix--)='\0';
+    *(postfix--)='\n';
+    char c= pop(&s);
+    //printf("5lasna %d\n",isEmpty(&s));
+    //printf("5lasna\n");
+
+
+}
+/*
+ * evaluatePostfix: Evaluates an expression in postfix notation
+ *					 (Reverse-Polish Notation)
+ */
+float evaluatePostfix(char* postfix)
+{  init(&s);
+    initf(&f);
+    char temp[100];
+    while (*postfix!='\n')
+    {
+        int i=0;
+        while (*postfix==' ')
+            postfix++;
+            //printf("temp=");
+        while (!mo7armat(*postfix))
+        {
+            temp[i++]=*(postfix++);
+            //printf("%c",temp[i-1]);
+        } temp[i]='\0';
+        //printf("\nta2te3a= %s\n",temp);
+        if(isnum(temp[i-1]))
+        {
+            float x=atof(temp);
+            pushf(&f,x);
+            //printf("saved number =%f\n",topf(&f));
+        }
+        else   ////printf("else ");
+        {
+            float t=popf(&f);
+            ////printf("eshta ?")x;
+            float s=popf(&f);
+            //printf("opperand =%c\n",temp[i-1]);
+            float val;
+            switch (temp[i-1])
+            {
+            case '-' :val =(s-t);
+                pushf(&f,val);
+                break;
+            case '+' :val =(s+t);
+                pushf(&f,val);
+                break;
+            case '/' :val=s/t;
+                pushf(&f,val);
+                break;
+            case '*' :val =s*t;
+                pushf(&f,val);
+                break;
+            case '^' :val =pow(t,s);
+                pushf(&f,val);
+                break;
+            default : pushf(&f,t);pushf(&f,s);break;
+            } //printf("val =%f\n",val);
+            //printf("current +=%f\n",top(&f));
+        }
+        //printf("loop \n");
+    }
+    float x =popf(&f);
+    //printf("5alasna %f ",x);
+    return x;
+}
+/*
+ *
+ */
+int main(int argc, char**argv)
+{
+
+
+    char infixExpr[256] = "";
+    char postfixExpr[256] = "";
+
+    printf("Enter an expression you want to evaluate or Ctrl+Z to exit: ");
+    while(fgets(infixExpr, 255, stdin) != NULL)
+    {
+        infixToPostfix(infixExpr, postfixExpr);
+        printf("Postfix : %s", postfixExpr);
+
+
+        float result = evaluatePostfix(postfixExpr);
+        printf("Result: %0.2f\n\n", result);
+
+        printf("Enter an expression you want to evaluate or Ctrl+Z to exit: ");
+    }
+    return 0;
+}
+
+

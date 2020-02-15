@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1558011792 source:c:\users\islam\desktop\salem nafsak\pirority_2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

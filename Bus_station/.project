@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Bus_station</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src/Bus.txt</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/Bus.txt</locationURI>
+		</link>
+		<link>
+			<name>src/Customer.txt</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/Customer.txt</locationURI>
+		</link>
+		<link>
+			<name>src/Driver.txt</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/Driver.txt</locationURI>
+		</link>
+		<link>
+			<name>src/Trip.txt</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/Trip.txt</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

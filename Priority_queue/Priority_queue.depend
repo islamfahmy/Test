@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1558015842 source:c:\users\islam\desktop\salem nafsak\priority_queue\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
